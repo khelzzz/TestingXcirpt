@@ -614,3 +614,96 @@ end
 -- All parts complete.
 ----------------------------------------------------------------
 
+-- ===============================
+-- MOBILE UI FORCE-INIT FIX
+-- ===============================
+
+task.spawn(function()
+    -- wait for UI lib to fully load (important for mobile)
+    task.wait(0.5)
+
+    if not Window or not Window.Tab then
+        warn("[ChilliHub] UI framework not ready")
+        return
+    end
+
+    -- MAIN TAB
+    local MainTab = Window:Tab({
+        Title = "Main"
+    })
+
+    local MainSection = MainTab:Section({
+        Title = "General"
+    })
+
+    MainSection:Button({
+        Title = "Rescan Plots",
+        Callback = function()
+            if scanPlots then
+                scanPlots()
+            end
+        end
+    })
+
+    -- MOVEMENT TAB
+    local MoveTab = Window:Tab({
+        Title = "Movement"
+    })
+
+    local MoveSection = MoveTab:Section({
+        Title = "Boosts"
+    })
+
+    MoveSection:Slider({
+        Title = "Speed",
+        Min = 16,
+        Max = 200,
+        Default = Config.Speed or 16,
+        Callback = function(v)
+            Config.Speed = v
+            saveConfig()
+        end
+    })
+
+    MoveSection:Slider({
+        Title = "Jump",
+        Min = 50,
+        Max = 300,
+        Default = Config.Jump or 50,
+        Callback = function(v)
+            Config.Jump = v
+            saveConfig()
+        end
+    })
+
+    MoveSection:Slider({
+        Title = "Gravity",
+        Min = 10,
+        Max = 196,
+        Default = Config.Gravity or workspace.Gravity,
+        Callback = function(v)
+            Config.Gravity = v
+            saveConfig()
+        end
+    })
+
+    -- ESP TAB
+    local ESPTab = Window:Tab({
+        Title = "ESP"
+    })
+
+    local ESPSection = ESPTab:Section({
+        Title = "Players"
+    })
+
+    ESPSection:Toggle({
+        Title = "Player ESP",
+        Default = true,
+        Callback = function(v)
+            Config.ESPEnabled = v
+            saveConfig()
+        end
+    })
+
+    print("[ChilliHub] Mobile UI initialized")
+end)
